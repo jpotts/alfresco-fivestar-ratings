@@ -1,0 +1,13 @@
+.rating-label {
+    float: left;
+}
+
+.rating {
+    float: left;
+    margin-left: 10px;
+}
+
+.rating-count {
+    float: left;
+    margin-left: 10px;
+}
