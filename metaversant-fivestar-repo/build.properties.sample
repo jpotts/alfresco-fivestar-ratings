@@ -1,0 +1,3 @@
+alfresco.sdk.dir=/opt/alfresco/3.3-enterprise/sdk/lib
+alfresco.web.dir=/opt/apache/tomcat/apache-tomcat-6.0.18/webapps/alfresco
+alfresco.war.path=/opt/alfresco/3.3-enterprise/war/alfresco.war

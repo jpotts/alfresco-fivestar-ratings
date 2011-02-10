@@ -1,0 +1,64 @@
+<alfresco-config>
+
+    <!-- Put Share Client in debug mode -->
+	<config replace="true">
+		<flags>
+			<client-debug>false</client-debug>
+			<client-debug-autologging>false</client-debug-autologging>
+		</flags>
+	</config>
+
+	<!-- Put Surf into development mode -->
+	<!--
+	<config evaluator="string-compare" condition="WebFramework">
+		<web-framework>
+			<autowire>
+			    <mode>development</mode>			    
+			</autowire>
+		</web-framework>
+	</config>
+    -->
+
+	<config evaluator="string-compare" condition="DocumentLibrary">
+
+        <!--
+         Used by the "Manage Aspects" action
+
+         For custom aspects, remember to also add the relevant i18n string(s)
+            cm_myaspect=My Aspect
+        -->
+        <aspects>
+            <!-- Aspects that a user can see -->
+            <visible>
+                <aspect name="mr:rateable" />
+            </visible>
+
+            <!-- Aspects that a user can add. Same as "visible" if left empty -->
+            <addable>
+            </addable>
+
+            <!-- Aspects that a user can remove. Same as "visible" if left empty -->
+            <removeable>
+            </removeable>
+        </aspects>
+    </config>
+
+    <!-- FORM CONFIGURATIONS START HERE -->
+    
+    <config evaluator="aspect" condition="mr:rateable">
+	    <forms>
+	        <form>
+	            <field-visibility>
+	                <show id="mr:averageRating" for-mode="view" />
+	                <show id="mr:ratingCount" for-mode="view" />
+	            </field-visibility>
+	            <appearance> 				    
+		            <field id="mr:averageRating" label-id="prop.mr_averageRating" read-only="true">
+		                <control template="/com/metaversant/form/controls/rating.ftl" />
+		            </field>
+		            <field id="mr:ratingCount" label-id="prop.mr_ratingCount" read-only="true" />
+			    </appearance>
+	        </form>
+	    </forms>
+	</config>
+</alfresco-config>

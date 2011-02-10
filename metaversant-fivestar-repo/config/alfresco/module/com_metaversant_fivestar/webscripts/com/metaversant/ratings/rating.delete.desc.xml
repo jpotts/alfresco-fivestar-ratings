@@ -1,0 +1,9 @@
+<webscript>
+  <shortname>Delete Content Ratings</shortname>
+  <description>Deletes all ratings for the specified node</description>
+  <url>/api/node/{store_type}/{store_id}/{id}/mratings</url>
+  <format default="json">extension</format>
+  <authentication>admin</authentication>
+  <transaction>requiresnew</transaction>
+  <family>Metaversant</family>
+</webscript>
