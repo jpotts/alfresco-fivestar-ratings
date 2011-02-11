@@ -1,5 +1,5 @@
 #summary How to install this customization
-#labels Installation
+#labels Installation,Featured
 
 = Introduction =
 
