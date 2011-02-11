@@ -38,3 +38,5 @@ Specifically, the following Alfresco Share components are overridden by this mod
  * Search
 
 If you have made any changes to these you may have to manually merge the files from this customization with your existing customizations.
+
+If you are building from source into a freshly-deployed Share WAR and you have no customizations of your own to worry about, you can simply run `ant deploy` from the root of the metaversant-fivestar-share project directory.
