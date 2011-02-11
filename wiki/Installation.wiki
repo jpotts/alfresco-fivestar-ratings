@@ -1,0 +1,40 @@
+#summary How to install this customization
+#labels Installation
+
+= Introduction =
+
+This customization is packaged in two separate parts: Repository extensions and Share extensions. Both must be deployed in order for the customization to work as designed. Of course, if you only want the back-end ratings service you could deploy just the repository AMP.
+
+= Deploying the repository extensions =
+
+The repository extensions are packaged as an AMP. You should be able to install the AMP into your alfresco.war using Alfresco's Module Management Tool (MMT) like you would any other AMP (See the Alfresco Wiki page on [http://wiki.alfresco.com/wiki/Module_Management_Tool AMPs]).
+
+If you are building from source, just run:
+`ant deploy`
+
+from the root of the metaversant-fivestar-repo project directory.
+
+Note that this AMP overrides certain out-of-the-box web scripts. If you have other AMPs installed that override those scripts, you may need to manually merge the changes. Specifically, the following Alfresco modules are overridden by web scripts placed in the extension directory:
+ * doclist.get.js
+ * evaluator.lib.js
+ * search.get.js
+ * search.get.json.ftl
+ * search.lib.js
+
+= Deploying the Share extensions =
+
+Ideally, you are deploying to a Share web application instance that has not been customized. If that is the case, consider yourself lucky and simply unzip the Share extensions package over the top of your expanded Share WAR.
+
+If, on the other hand, your Share web application has been customized, you'll need to be careful not to compromise those customizations by deploying this code.
+
+Specifically, the following Alfresco Share components are overridden by this module:
+ * Modified Documents Dashlet
+ * Documents I'm Editing Dashlet
+ * My Documents Dashlet
+ * Document Details/Document Info
+ * Document Details/Repo Document Info
+ * Document Library/Document List
+ * Document Library/Repo Document List
+ * Search
+
+If you have made any changes to these you may have to manually merge the files from this customization with your existing customizations.
