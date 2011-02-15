@@ -1,10 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+   Copyright 2011, Jeff Potts
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
 <project name="Metaversant Five Star Ratings Share Extensions" default="deploy" basedir=".">
 	<property file="build.properties" />
 
 	<property name="project.dir" value="." />
 	<property name="build.dir" value="${project.dir}/build" />
-	<property name="project.name" value="someco-share-extensions" />
+	<property name="project.name" value="metaversant-fivestar-share" />
 	<property name="package.file.zip" value="${build.dir}/${project.name}.zip" />
 	<property name="package.file.jar" value="${build.dir}/${project.name}.jar" />
 	<property name="project.file.zip" value="${build.dir}/${project.name}-project.zip" />
