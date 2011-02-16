@@ -38,7 +38,8 @@
         if (type == 'document' && isRateable)
         {
             scope.widgets.dataTable.subscribe("renderEvent", mratings.onMetadataRefresh, id, mratings);
-            return '<div class="details"><div class="rating-label">Rating:</div><div id="' + id + '" class="rating">' + rating + '</div><div>&nbsp;(' + ratingsCount + (ratingsCount == 1 ? ' rating' : ' ratings') + ')</div></div>';            
+            // <div>&nbsp;(' + ratingsCount + (ratingsCount == 1 ? ' rating' : ' ratings') + ')</div>
+            return '<div class="details"><div class="rating-label">Rating:</div><div id="' + id + '" class="rating">' + rating + '</div><div style="clear:left;"></div></div>';            
         }
         else
         {
