@@ -1,0 +1,181 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC '-//SPRING/DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
+<!-- 
+   Copyright 2011, Jeff Potts
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+  -->
+<beans>
+	<!-- Model -->
+	
+    <bean id="metaversantRatings.extension.bootstrapExtraBundlesBean" class="org.alfresco.web.app.ResourceBundleBootstrap">
+		<property name="resourceBundles">
+		    <list>
+				<value>alfresco.module.com_metaversant_fivestar.messages.MetaversantRatings</value>
+	        </list>
+		</property>
+    </bean>
+
+    <bean id="metaversantRatings.extension.dictionaryBootstrap" parent="dictionaryModelBootstrap" depends-on="dictionaryBootstrap">
+		<property name="models">
+	        <list>
+				<value>alfresco/module/com_metaversant_fivestar/model/MetaversantRatingsModel.xml</value>
+	        </list>
+		</property>
+    </bean>
+
+    <bean id="metaversantRatings.extension.configBootstrap" class="org.alfresco.web.config.WebClientConfigBootstrap" init-method="init">
+       <property name="configs">
+         <list>
+            <value>classpath:alfresco/module/com_metaversant_fivestar/ui/web-client-config-custom.xml</value>
+         </list>
+       </property>
+    </bean>
+    
+    <!-- Behaviors -->
+    
+    <bean id="metaversantRatings.onCreateRatingNode" class="org.alfresco.repo.policy.registration.ClassPolicyRegistration" parent="policyRegistration" depends-on="metaversantRatings.extension.dictionaryBootstrap">
+        <property name="policyName">
+            <value>{http://www.alfresco.org}onCreateNode</value>
+        </property>
+        <property name="className">
+            <value>{http://www.metaversant.com/model/ratings/1.0}rating</value>
+        </property>
+        <property name="behaviour">
+           <bean class="org.alfresco.repo.jscript.ScriptBehaviour" parent="scriptBehaviour">
+			<property name="location">
+	            <bean class="org.alfresco.repo.jscript.ClasspathScriptLocation">
+	            <constructor-arg>
+	             <value>alfresco/module/com_metaversant_fivestar/scripts/onCreateRating.js</value>
+				</constructor-arg>
+                </bean>
+            </property>
+           </bean>
+        </property>
+    </bean>
+
+    <bean id="metaversantRatings.onUpdateRatingNode" class="org.alfresco.repo.policy.registration.ClassPolicyRegistration" parent="policyRegistration" depends-on="metaversantRatings.extension.dictionaryBootstrap">
+        <property name="policyName">
+            <value>{http://www.alfresco.org}onUpdateNode</value>
+        </property>
+        <property name="className">
+            <value>{http://www.metaversant.com/model/ratings/1.0}rating</value>
+        </property>
+        <property name="behaviour">
+           <bean class="org.alfresco.repo.jscript.ScriptBehaviour" parent="scriptBehaviour">
+		<property name="location">
+		    <bean class="org.alfresco.repo.jscript.ClasspathScriptLocation">
+	                <constructor-arg>
+	                    <value>alfresco/module/com_metaversant_fivestar/scripts/onUpdateRating.js</value>
+			</constructor-arg>
+                    </bean>
+                </property>
+           </bean>
+        </property>
+    </bean>
+
+    <bean id="metaversantRatings.onDeleteRatingNode" class="org.alfresco.repo.policy.registration.ClassPolicyRegistration" parent="policyRegistration" depends-on="metaversantRatings.extension.dictionaryBootstrap">
+        <property name="policyName">
+            <value>{http://www.alfresco.org}onDeleteNode</value>
+        </property>
+        <property name="className">
+            <value>{http://www.metaversant.com/model/ratings/1.0}rating</value>
+        </property>
+        <property name="behaviour">
+           <bean class="org.alfresco.repo.jscript.ScriptBehaviour" parent="scriptBehaviour">
+                        <property name="location">
+                                <bean class="org.alfresco.repo.jscript.ClasspathScriptLocation">
+                                <constructor-arg>
+	                                <value>alfresco/module/com_metaversant_fivestar/scripts/onDeleteRating.js</value>
+								</constructor-arg>
+                            	</bean>
+                        </property>
+           </bean>
+        </property>
+    </bean>
+    
+    <!-- Services -->
+    
+    <bean id="MetaversantRatingService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <list>
+                <value>com.metaversant.alfresco.service.RatingService</value>
+            </list>
+        </property>
+        <property name="target">
+            <ref bean="metaversantRatingServiceImpl"/>
+        </property>
+ 
+        <property name="interceptorNames">
+            <list>
+                <idref local="MetaversantRatingService_transaction" />
+                <idref local="MetaversantRatingService_security" />
+            </list>
+        </property>
+
+	</bean>
+	
+	<bean id="MetaversantRatingService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="delete*">${server.transaction.mode.default}</prop>
+                <prop key="get*">${server.transaction.mode.readOnly}</prop>
+                <prop key="has*">${server.transaction.mode.readOnly}</prop>
+                <prop key="rate*">${server.transaction.mode.default}</prop>                
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+	
+	<bean id="MetaversantRatingService_security" class="net.sf.acegisecurity.intercept.method.aopalliance.MethodSecurityInterceptor">
+		<property name="authenticationManager">
+			<ref bean="authenticationManager"/>
+		</property>
+        <property name="accessDecisionManager">
+        	<ref bean="accessDecisionManager"/>
+        </property>
+        <property name="afterInvocationManager">
+        	<ref bean="afterInvocationManager"/>
+        </property>
+        <property name="objectDefinitionSource">
+            <value>
+				com.metaversant.alfresco.service.RatingService.hasRatings=ACL_ALLOW
+				com.metaversant.alfresco.service.RatingService.rate=ACL_ALLOW
+				com.metaversant.alfresco.service.RatingService.deleteRatings=ACL_METHOD.ROLE_ADMINISTRATOR
+				com.metaversant.alfresco.service.RatingService.getRatingData=ACL_ALLOW
+				com.metaversant.alfresco.service.RatingService.getUserRating=ACL_ALLOW
+            </value>
+        </property>
+	</bean>
+	
+	<bean id="metaversantRatingServiceImpl" class="com.metaversant.alfresco.service.RatingServiceImpl" >
+		<property name="nodeService">
+			<ref bean="NodeService" />          
+      </property>
+      <property name="searchService">
+			<ref bean="SearchService" />
+      </property>
+	</bean>
+   
+	<bean id="metaversantRatingsScript" parent="baseJavaScriptExtension" class="com.metaversant.alfresco.jscript.Ratings">
+		<property name="extensionName">
+        	<value>mratings</value>
+		</property>
+		<property name="ratingService">
+			<ref bean="MetaversantRatingService" />
+		</property>		
+	</bean>
+</beans>

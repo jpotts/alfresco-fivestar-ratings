@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+   Copyright 2011, Jeff Potts
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+  -->
+<project name="Metaversant Five Star Ratings Repository Extensions" default="deploy" basedir=".">
+	<property file="build.properties" />
+
+	<property name="project.dir" value="." />
+	<property name="build.dir" value="${project.dir}/build" />
+	<property name="bin.dir" value="${project.dir}/bin" />
+	<property name="project.name" value="metaversant-fivestar-repo" />
+	<property name="package.file.zip" value="${build.dir}/${project.name}.zip" />
+	<property name="package.file.jar" value="${build.dir}/${project.name}.jar" />
+	<property name="project.file.zip" value="${build.dir}/${project.name}-project.zip" />
+    <property name="package.file.amp" value="${build.dir}/${project.name}.amp" />
+    <property name="module.id" value="com_metaversant_fivestar" />
+    <property name="module.dir" value="/alfresco/module" />
+	<property name="source.dir" value="${project.dir}/src" />
+	<property name="config.dir" value="${project.dir}/config" />
+
+	<path id="classpath.server">
+		<fileset dir="${alfresco.sdk.dir}/server" includes="**/*.jar" />
+	</path>
+
+	<path id="classpath.remote">
+		<fileset dir="${alfresco.sdk.dir}/remote" includes="**/*.jar" />
+	</path>	
+
+	<path id="classpath.build">
+	    <fileset dir="${build.dir}" includes="**/*.jar" />
+    </path>
+    
+	<target name="clean" description="Removes all generated files">
+		<delete dir="${build.dir}" />
+		<delete dir="${bin.dir}" />		
+	</target>
+
+	<target name="setup" description="Creates the ${build.dir} and ${bin.dir} directories">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${bin.dir}" />		
+	</target>
+	
+	<target name="package-amp" depends="setup, package-jar" description="Packages the customizations as an Alfresco module in ${package.file.amp}">
+		<delete file="${package.file.amp}" />
+		<zip destfile="${package.file.amp}">
+			<zipfileset file="${package.file.jar}" prefix="lib" />
+			<zipfileset file="${config.dir}${module.dir}/${module.id}/module.properties" />						
+			<zipfileset file="${config.dir}${module.dir}/${module.id}/file-mapping.properties" />
+			<zipfileset dir="${config.dir}${module.dir}/${module.id}" prefix="config${module.dir}/${module.id}" />			
+		</zip>
+	</target>
+	
+	<target name="install-amp" depends="package-amp" description="Uses the Alfresco MMT to install the AMP into ${alfresco.war.path}">
+        <java dir="." fork="true" classname="org.alfresco.repo.module.tool.ModuleManagementTool">
+			<classpath refid="classpath.server"/>
+            <arg line="install ${package.file.amp} ${alfresco.war.path} -force -verbose"/>
+        </java>
+    </target>
+    
+	<target name="deploy" depends="deploy-amp" />
+	
+    <target name="deploy-amp" depends="install-amp" description="Unzips the AMP'd WAR file into ${alfresco.web.dir}">
+   		<unzip src="${alfresco.war.path}" dest="${alfresco.web.dir}" />
+    </target>
+
+	<target name="zip-project" depends="setup" description="Zips the entire Eclipse project as-is into ${project.file.zip}">
+		<delete file="${project.file.zip}" />
+		<zip destfile="${project.file.zip}">
+			<zipfileset dir="${project.dir}" excludes="build/** bin/**" prefix="${project.name}-${label}" />
+		</zip>
+	</target>	
+
+	<target name="compile" description="Compiles src to ${bin.dir}">
+		<mkdir dir="${bin.dir}" />
+		<javac srcdir="${source.dir}/java" destdir="${bin.dir}" source="1.6" target="1.6" debug="on" fork="yes" deprecation="on">
+			<classpath refid="classpath.server"/>
+			<classpath refid="classpath.remote"/>
+		</javac>
+		<!-- copy in non-compiled files like props if needed -->
+		<copy todir="${bin.dir}">
+			<fileset dir="${source.dir}/java" excludes="**/*.java"/>
+		</copy>
+	</target>
+	
+	<target name="package-jar" depends="setup, compile"
+		description="Jars up the compiled classes into ${package.file.jar}">
+			<delete file="${package.file.jar}" />
+			<jar destfile="${package.file.jar}">
+				<fileset dir="${bin.dir}" includes="com/**" />
+			</jar>
+	</target>
+
+	<target name="copy-webscripts" description="Used for development only, copies web scripts directly to web scripts directory">
+		<copy todir="${alfresco.web.dir}/WEB-INF/classes/alfresco/extension/templates/webscripts">
+			<fileset dir="${config.dir}${module.dir}/${module.id}/webscripts" />
+		</copy>
+	</target>
+	
+</project>
