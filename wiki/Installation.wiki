@@ -40,3 +40,10 @@ Specifically, the following Alfresco Share components are overridden by this mod
 If you have made any changes to these you may have to manually merge the files from this customization with your existing customizations.
 
 If you are building from source into a freshly-deployed Share WAR and you have no customizations of your own to worry about, you can simply run `ant deploy` from the root of the metaversant-fivestar-share project directory.
+
+== Version-specific notes ==
+
+If you are deploying to *Alfresco 3.3g Community*, the Recently Modified Documents dashlet will show a Freemarker error using the source code in trunk. To correct, simply apply the patch in the patches directory in the project source. After checking out the source, from the root directory of the share extensions project, do this:
+`patch -p0 -i patches/3.3g-community.diff`
+
+Then, deploy the customizations as noted above.
