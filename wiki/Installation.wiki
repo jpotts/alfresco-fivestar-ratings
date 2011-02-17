@@ -5,21 +5,22 @@
 
 This customization is packaged in two separate parts: Repository extensions and Share extensions. Both must be deployed in order for the customization to work as designed. Of course, if you only want the back-end ratings service you could deploy just the repository AMP.
 
+If you are checking out the source code, be sure to use the tag that matches the version of Alfresco you are deploying to. Currently, the code for both 3.3 Enterprise and 3.3g Community is the same with one minor difference (see [#Version-specific_notes Version-Specific Notes], below).
+
 = Deploying the repository extensions =
 
 The repository extensions are packaged as an AMP. You should be able to install the AMP into your alfresco.war using Alfresco's Module Management Tool (MMT) like you would any other AMP (See the Alfresco Wiki page on [http://wiki.alfresco.com/wiki/Module_Management_Tool AMPs]).
 
-If you are building from source, just run:
-`ant deploy`
-
-from the root of the metaversant-fivestar-repo project directory.
-
-Note that this AMP overrides certain out-of-the-box web scripts. If you have other AMPs installed that override those scripts, you may need to manually merge the changes. Specifically, the following Alfresco modules are overridden by web scripts placed in the extension directory:
+Note that this AMP overrides certain out-of-the-box web scripts through Alfresco's standard extension mechanism (no Alfresco-provided files are replaced). If you have other AMPs installed that override the same scripts as this module, you may need to manually merge the changes. Specifically, the following Alfresco modules are overridden by web scripts placed in the extension directory:
  * doclist.get.js
  * evaluator.lib.js
  * search.get.js
  * search.get.json.ftl
  * search.lib.js
+
+== Building from Source ==
+
+If you are building from source you must first create a build.properties file. Use the build.properties.sample file included with the source as a guide. Then, run `ant deploy` from the root of the metaversant-fivestar-repo project directory. Ant will create the AMP file, merge it with your Alfresco WAR file, and then unzip the WAR to your webapp root.
 
 = Deploying the Share extensions =
 
@@ -27,7 +28,7 @@ Ideally, you are deploying to a Share web application instance that has not been
 
 If, on the other hand, your Share web application has been customized, you'll need to be careful not to compromise those customizations by deploying this code.
 
-Specifically, the following Alfresco Share components are overridden by this module:
+Specifically, the following Alfresco Share components are overridden by this module using Alfresco's standard extension mechanism (the web-extension directory):
  * Modified Documents Dashlet
  * Documents I'm Editing Dashlet
  * My Documents Dashlet
@@ -39,7 +40,9 @@ Specifically, the following Alfresco Share components are overridden by this mod
 
 If you have made any changes to these you may have to manually merge the files from this customization with your existing customizations.
 
-If you are building from source into a freshly-deployed Share WAR and you have no customizations of your own to worry about, you can simply run `ant deploy` from the root of the metaversant-fivestar-share project directory.
+== Building from Source ==
+
+If you are building from source into a freshly-deployed Share WAR and you have no customizations of your own to worry about, you can use Ant to deploy the customizations. First, create a build.properties file using the included build.properties.sample file as a guide. Then, run `ant deploy` from the root of the metaversant-fivestar-share project directory. Ant will zip up the extensions and then unzip the extensions into your exploded Share WAR webapp root.
 
 == Version-specific notes ==
 
