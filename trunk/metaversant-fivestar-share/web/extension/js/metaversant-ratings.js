@@ -229,6 +229,7 @@ if (typeof Metaversant == "undefined" || !Metaversant)
                
                 ratingDiv.appendChild(star);
             }
+            ratingDiv.style.visibility = "visible";
         },
 
         /**
@@ -242,6 +243,7 @@ if (typeof Metaversant == "undefined" || !Metaversant)
             var handleSuccess = function(o) {
                 var el = document.getElementById(this.id + '_' + id);
                 if (el.hasChildNodes()) {
+                    el.style.visibility = "hidden";
                     var guard = el.childNodes.length;
                     for(var i = 0; i < guard; i++) {
                         el.removeChild(el.childNodes[0]);
