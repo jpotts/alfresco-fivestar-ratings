@@ -48,7 +48,7 @@ if (typeof Metaversant == "undefined" || !Metaversant)
      */
     Metaversant.Ratings = function(htmlId)
     {
-        Metaversant.Ratings.superclass.constructor.call(this, "Metaversant.Ratings", htmlId);
+        Metaversant.Ratings.superclass.constructor.call(this, "Metaversant.Ratings", htmlId, ["button", "menu", "container", "resize", "datasource", "datatable"]);
 
         // Mandatory properties
         this.name = "Metaversant.Ratings";
@@ -152,6 +152,10 @@ if (typeof Metaversant == "undefined" || !Metaversant)
             this.renderRatingsMarkup();
         },
 
+        /**
+         * Finds all rating divs on the page and calls renderRatingMarkup for each one.
+         * @method renderRatingsMarkup
+         */
         renderRatingsMarkup: function MetaversantRatings_renderRatingsMarkup()
         {
             var ratings = document.getElementsByTagName('div');
@@ -164,6 +168,11 @@ if (typeof Metaversant == "undefined" || !Metaversant)
             }      
         },
         
+        /**
+         * Given a specific ID, finds that div and calls renderRatingMarkup.
+         * @method renderRatingsMarkupById
+         * @param id {String} representing the ID of the div to be rendered
+         */
         renderRatingsMarkupById: function MetaversantRatings_renderRatingsMarkupById(id){
             var ratingDiv = YAHOO.util.Dom.get(id);
             if (ratingDiv != undefined)
@@ -222,11 +231,16 @@ if (typeof Metaversant == "undefined" || !Metaversant)
             }
         },
 
-        refreshRatingMarkup: function MetaversantRatings_refreshRatingMarkup(id, obj)
+        /**
+         * Removes the child nodes of the specified div, retrieves the current rating, and writes it to the div.
+         * @method refreshRatingMarkup
+         * @param id {String} representing the ID of the div that needs to be refreshed.
+         */
+        refreshRatingMarkup: function MetaversantRatings_refreshRatingMarkup(id)
         {
-            var url = obj.options.targetUrl;
+            var url = this.options.targetUrl;
             var handleSuccess = function(o) {
-                var el = document.getElementById(obj.id + '_' + id);
+                var el = document.getElementById(this.id + '_' + id);
                 if (el.hasChildNodes()) {
                     var guard = el.childNodes.length;
                     for(var i = 0; i < guard; i++) {
@@ -235,7 +249,14 @@ if (typeof Metaversant == "undefined" || !Metaversant)
                 }
                 var ratingValue = document.createTextNode(o.json.data.nodeStatistics.fiveStarRatingScheme.averageRating);
                 el.appendChild(ratingValue);
-                obj.renderRatingMarkup(el);
+                if (this.options.fireMetadataRefresh)
+                {
+                    YAHOO.Bubbling.fire("metadataRefresh"); 
+                }
+                else
+                {
+                    this.renderRatingMarkup(el);
+                }
             };
 
             var handleFailure = function(o) {
@@ -260,11 +281,22 @@ if (typeof Metaversant == "undefined" || !Metaversant)
             });
         }, 
 
+        /**
+         * Event handler for metadata refresh.
+         * @method onMetadataRefresh
+         * @param layer
+         * @param args
+         */
         onMetadataRefresh: function MetaversantRatings_onMetadataRefresh(layer, args)
         {
             this.renderRatingsMarkupById(args);
         },
 
+        /**
+         * Event handler for mouseover.
+         * @method displayHover
+         * @param e
+         */
         displayHover: function MetaversantRatings_displayHover(e, obj)
         {
             var targ;
@@ -291,6 +323,11 @@ if (typeof Metaversant == "undefined" || !Metaversant)
             }
         },
 
+        /**
+         * Event handler for mouse out.
+         * @method displayNormal
+         * @param e
+         */
         displayNormal: function MetaversantRatings_displayNormal(e, obj)
         {
             var targ;
@@ -318,6 +355,11 @@ if (typeof Metaversant == "undefined" || !Metaversant)
             }
         },
 
+        /**
+         * Event handler for click.
+         * @method postRating
+         * @param e
+         */
         postRating: function MetaversantRatings_postRating(e, obj)
         {
             var targ;
@@ -341,11 +383,7 @@ if (typeof Metaversant == "undefined" || !Metaversant)
             var rating = idEls[idEls.length - 1];
             var url = obj.options.targetUrl;
             var handleSuccess = function(o) {
-                obj.refreshRatingMarkup(id, obj);
-                if (obj.options.fireMetadataRefresh)
-                {
-                    YAHOO.Bubbling.fire("metadataRefresh"); 
-                }
+                obj.refreshRatingMarkup(id);
             };
 
             var handleFailure = function(o) {

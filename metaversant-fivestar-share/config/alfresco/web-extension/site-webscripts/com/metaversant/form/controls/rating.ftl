@@ -13,6 +13,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 </#comment>
+<#comment>
+Major hack alert: In 3.4 Enterprise, the field HTML ID changes when a metadata
+refresh happens which causes a problem for the client-side JavaScript ratings
+component. So, I'm stripping out the change to keep the field ID consistent.
+</#comment>
 <script>
 	var mratings = new Metaversant.Ratings('${fieldHtmlId}').setOptions({
 		targetUrl: "${url.context}/proxy/alfresco/api/node/workspace/SpacesStore/{id}/mratings",

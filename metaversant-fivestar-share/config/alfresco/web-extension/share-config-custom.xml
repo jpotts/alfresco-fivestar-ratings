@@ -18,7 +18,7 @@
     <!-- Put Share Client in debug mode -->
 	<config replace="true">
 		<flags>
-			<client-debug>false</client-debug>
+			<client-debug>true</client-debug>
 			<client-debug-autologging>false</client-debug-autologging>
 		</flags>
 	</config>
