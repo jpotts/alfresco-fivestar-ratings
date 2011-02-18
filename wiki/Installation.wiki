@@ -48,7 +48,7 @@ If you are building from source into a freshly-deployed Share WAR and you have n
 
 === Alfresco 3.3g Community ===
 
-If you are deploying to *Alfresco 3.3g Community*, the Recently Modified Documents dashlet will show a Freemarker error. To correct, simply apply the patch in the patches directory in the project source. After checking out the source, from the root directory of the share extensions project, do this:
+If you are building from source and deploying to *Alfresco 3.3g Community*, the Recently Modified Documents dashlet will show a Freemarker error. To correct, simply apply the patch in the patches directory in the project source. After checking out the source, from the root directory of the share extensions project, do this:
 `patch -p0 -i patches/3.3g-community.diff`
 
 Then, deploy the customizations as noted above.
@@ -59,9 +59,11 @@ If you are using one of the pre-packaged, version-specific ZIPs, the patch has a
 
 There is a bug in *Alfresco 3.4.0 Enterprise* that causes problems for the ratings component on the document details page in Share. Refer to [https://issues.alfresco.com/jira/browse/ALF-7238 ALF-7238] on Alfresco Jira for technical info and a patch that you must apply for this component to work properly in 3.4 Enterprise.
 
+You must apply this patch whether you are building from source or using one of the binary builds.
+
 === Alfresco 3.4d Community ===
 
-If you are deploying to *Alfresco 3.4d Community*, start with the 3.4 Enterprise code and then apply the patch in the patches directory in the project source. After checking out the source, from the root directory of the share extensions project, do this:
+If you are building from source and deploying to *Alfresco 3.4d Community*, start with the 3.4 Enterprise code and then apply the patch in the patches directory in the project source. After checking out the source, from the root directory of the share extensions project, do this:
 `patch -p0 -i patches/3.4d-community.diff`
 
 Then, deploy the customizations as noted above.
