@@ -27,7 +27,7 @@
       <div class="detail-list-item <#if doc_index = 0>first-item<#elseif !doc_has_next>last-item</#if>">
          <div>
             <div class="icon">
-               <img src="${url.context}/components/images/generic-file-32.png" alt="${doc.displayName?html}" />
+               <img src="${url.context}/res/components/images/generic-file-32.png" alt="${doc.displayName?html}" />
             </div>
             <div class="details">
                <h4><@doclibUrl doc /></h4>
@@ -35,7 +35,7 @@
 			       <div class="rating-label">Rating:</div><div id="${instance.object.id}_ds_mrating_${doc.nodeRef?replace("workspace://SpacesStore/", "")}" class="rating">${doc.custom.averageRating}</div>
 			   </#if>
                <div <#if doc.custom?has_content && doc.custom.averageRating?exists>style="clear: left;"</#if>>
-                  ${msg("text.modified-by", modifiedBy)} ${msg("text.modified-on", doc.modifiedOn?datetime("dd MMM yyyy HH:mm:ss 'GMT'Z '('zzz')'")?string(msg("date-format.defaultFTL")))}
+                  ${msg("text.modified-by", modifiedBy)} ${msg("text.modified-on", xmldate(doc.modifiedOn)?string(msg("date-format.defaultFTL")))}
                </div>
             </div>
          </div>
