@@ -6,13 +6,15 @@
  */
 (function()
 {
-    /**
+    /**  
      * Alfresco Slingshot aliases
      */
     var $html = Alfresco.util.encodeHTML,
-      $links = Alfresco.util.activateLinks,
-      $combine = Alfresco.util.combinePaths;
-        
+        $links = Alfresco.util.activateLinks,
+        $combine = Alfresco.util.combinePaths,
+        $userProfile = Alfresco.util.userProfileLink,
+        $date = function $date(date, format) { return Alfresco.util.formatDate(Alfresco.util.fromISO8601(date), format) };
+
     /**
      * Generate ratings widget
      *
