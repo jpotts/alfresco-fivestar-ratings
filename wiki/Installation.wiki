@@ -5,7 +5,7 @@
 
 This customization is packaged in two separate parts: Repository extensions and Share extensions. Both must be deployed in order for the customization to work as designed. Of course, if you only want the back-end ratings service you could deploy just the repository AMP.
 
-If you are checking out the source code, be sure to use the tag that matches the version of Alfresco you are deploying to. Currently, the code for both 3.3 Enterprise and 3.3g Community is the same with one minor difference (see [#Version-specific_notes Version-Specific Notes], below).
+If you are checking out the source code, be sure to use the tag that matches the version of Alfresco you are deploying to. Currently, the code for both 3.3 Enterprise and 3.3g Community is the same with one minor difference (see [#Version-specific_notes Version-Specific Notes], below). Similarly, the 3.4 Enterprise and 3.4d Community code is the same with a minor difference.
 
 = Deploying the repository extensions =
 
@@ -58,3 +58,12 @@ If you are using one of the pre-packaged, version-specific ZIPs, the patch has a
 === Alfresco 3.4 Enterprise ===
 
 There is a bug in *Alfresco 3.4.0 Enterprise* that causes problems for the ratings component on the document details page in Share. Refer to [https://issues.alfresco.com/jira/browse/ALF-7238 ALF-7238] on Alfresco Jira for technical info and a patch that you must apply for this component to work properly in 3.4 Enterprise.
+
+=== Alfresco 3.4d Community ===
+
+If you are deploying to *Alfresco 3.4d Community*, start with the 3.4 Enterprise code and then apply the patch in the patches directory in the project source. After checking out the source, from the root directory of the share extensions project, do this:
+`patch -p0 -i patches/3.4d-community.diff`
+
+Then, deploy the customizations as noted above.
+
+If you are using one of the pre-packaged, version-specific ZIPs, the patch has already been applied.
